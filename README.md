@@ -8,13 +8,13 @@
 
 ![bVwyAB](./README.assets/bVwyAB-1701277439290-1.png)
 
-- $\sigma=(t_4-t_1)-(t_3-t_2)=\set{\rm blue\;part}$
+- $\sigma=(t_4-t_1)-(t_3-t_2)=\set{\rm bluepart}$
 - $\delta=t_2-t_1-\frac\sigma2$
 
 这两个估计量使用原始的统计量通过一系列滤波算法维护。
 
-- NTP授时建立在来回链路对称的假设之上，$\sigma$为Round Trip Time。
-- Client调整自身时间，使$\delta=0$即完成时间同步。
+- NTP授时建立在来回链路对称的假设之上， $\sigma$ 为Round Trip Time。
+- Client调整自身时间，使 $\delta=0$ 即完成时间同步。
 
 ### 1.2 TCS_RDMA
 
@@ -57,11 +57,14 @@ $$
 - $l$ 为server到client的链路时延
 - $D$ 是由于client端不感知包的到达，而是周期性地check包是否到达而引入的overhead。
 
-由于包的到达可以认为是均匀分布的，$D$ 应当在0到 $T_C$ 之间均匀分布，故 $D$ 的期望应当接近 $\frac12T_C$，其中 $T_C$ 是client端check的周期。我们可以假设 $D$ 的期望是由线性项和常数项组成的。
+由于包的到达可以认为是均匀分布的， $D$ 应当在0到 $T_C$ 之间均匀分布，故 $D$ 的期望应当接近 $\frac12T_C$，其中 $T_C$ 是client端check的周期。我们可以假设 $D$ 的期望是由线性项和常数项组成的。
+
 $$
 \bar D=\alpha T_C+d
 $$
+
 因此有：
+
 $$
 \bar b=-\delta+l+\alpha T_C+d
 $$
@@ -73,14 +76,14 @@ $$
 因此，为了在实际场景下得到 $\delta$，我们需要做的有以下两个事情：
 
 - 验证上面提出的假设，即 $\bar D$ 与 $T_C$ 有良好的线性关系 $\bar D=\alpha T_C+d$
-- 验证 $\alpha\approx0.5$，$d\approx0$，或者验证这两个值 $\alpha$ 和 $d$ 的稳定性以及找到测定这两个值的方案。
+- 验证 $\alpha\approx0.5$ ， $d\approx0$ ，或者验证这两个值 $\alpha$ 和 $d$ 的稳定性以及找到测定这两个值的方案。
 
 ## 3 实验方案
 
 ### 3.1 实验目的
 
 - 验证上面提出的假设，即 $\bar D$ 与 $T_C$ 有良好的线性关系 $\bar D=\alpha T_C+d$
-- 验证 $\alpha\approx0.5$，$d\approx0$，或者验证这两个值 $\alpha$ 和 $d$ 的稳定性以及找到测定这两个值的方案。
+- 验证 $\alpha\approx0.5$ ，$d\approx0$ ，或者验证这两个值 $\alpha$ 和 $d$ 的稳定性以及找到测定这两个值的方案。
 - 验证实验设计中提出来的假设。
 
 ### 3.2 实验假设
@@ -116,31 +119,36 @@ $$
 #### 3.3.2 统计量与参数关系
 
 记实验中测得的 $b_{sc}$ 为当`server=s, client=c`时的 $T_4-T_2$ 的统计均值。则有以下关系：
+
 $$
-b_{00}=\alpha T_{C0}+l_{00}+d_0\\
+b_{00}=\alpha T_{C0}+l_{00}+d_0
+$$
 
-b_{01}=\delta+\alpha T_{C1}+l_{01}+d_1\\
+$$
+b_{01}=\delta+\alpha T_{C1}+l_{01}+d_1
+$$
 
-b_{10}=-\delta+\alpha T_{C0}+l_{10}+d_0\\
+$$
+b_{10}=-\delta+\alpha T_{C0}+l_{10}+d_0
+$$
 
+$$
 b_{11}=\alpha T_{C1}+l_{11}+d_1
 $$
-我们控制每一组内有 $T_{C0}=T_{C1}=T_C$，则按假设有如下关系式
+
+我们控制每一组内有 $T_{C0}=T_{C1}=T_C$ ，则按假设有如下关系式
 
 $$
-\begin{bmatrix}0&T_C&0&1&0&1&0\\1&T_C&1&0&0&0&1\\-1&T_{C}&1&0&0&1&0\\0&T_C&0&0&1&0&1\end{bmatrix}
-\cdot\begin{bmatrix}\delta\\\alpha\\l_{01}\\l_{00}\\l_{11}\\d_0\\d_1\end{bmatrix}
-=
-\begin{bmatrix}b_{00}\\b_{01}\\b_{10}\\b_{11}\end{bmatrix}
+\begin{bmatrix}0&T_C&0&1&0&1&0\\1&T_C&1&0&0&0&1\\-1&T_{C}&1&0&0&1&0\\0&T_C&0&0&1&0&1\end{bmatrix}\cdot\begin{bmatrix}\delta\\\alpha\\l_{01}\\l_{00}\\l_{11}\\d_0\\d_1\end{bmatrix}=\begin{bmatrix}b_{00}\\b_{01}\\b_{10}\\b_{11}\end{bmatrix}
 $$
 
 化简得
+
 $$
-\begin{bmatrix}2&0&0&0&0&-1&1\\0&2T_C&0&1&1&1&1\\0&0&2&-1&-1&0&0\\0&0&0&1&-1&1&-1\end{bmatrix}
-\cdot\begin{bmatrix}\delta\\\alpha\\l_{01}\\l_{00}\\l_{11}\\d_0\\d_1\end{bmatrix}
-=
+\begin{bmatrix}2&0&0&0&0&-1&1\\0&2T_C&0&1&1&1&1\\0&0&2&-1&-1&0&0\\0&0&0&1&-1&1&-1\end{bmatrix}\cdot\begin{bmatrix}\delta\\\alpha\\l_{01}\\l_{00}\\l_{11}\\d_0\\d_1\end{bmatrix}=
 \begin{bmatrix}b_{01}-b_{10}\\b_{00}+b_{11}\\b_{10}+b_{01}-b_{00}-b_{11}\\b_{00}-b_{11}\end{bmatrix}
 $$
+
 这是一个欠定的方程，对于不同的实验组，采用不同的 $T_C$ 只会改变系数矩阵第2行的值，实际上可以让系数矩阵的欠定数减一。具体操作如下：
 
 #### 3.3.3 线性拟合
@@ -151,7 +159,7 @@ $$
 
 <img src="./README.assets/stat_1.png" alt="stat_1" style="zoom:33%;" />
 
-实验测得相关系数为 $R=0.9998$ ，$2\hat\alpha=0.9964$，$\hat b =5.6669$。
+实验测得相关系数为 $R=0.9998$ ， $2\hat\alpha=0.9964$ ， $\hat b =5.6669$ 。
 
 ##### 误差分析
 
@@ -163,11 +171,10 @@ $$
 \mathbf{std}(2\hat\alpha)=\mathbf{std}\frac{\sum(x_i-\bar x)y_i}{\sum (x_i-\bar x)^2}=\frac1{\sqrt{6N}}\frac{\sqrt{\sum(x_i-\bar x)^2{x_i^2}}}{\sum (x_i-\bar x)^2}
 $$
 
-在这次实验中，有 $x_i\in\set{100,200,\cdots,2000}$，计算得 $\mathbf{std}(2\hat\alpha)=\frac{0.2064}{\sqrt N}$，对于 $N=1000$ ，有 $\mathbf{std}(2\hat\alpha)=0.0065$ ；对于 $N=5000$ ，有 $\mathbf{std}(2\hat \alpha)=0.0029$
+在这次实验中，有 $x_i\in\set{100,200,\cdots,2000}$，计算得 $\mathbf{std}(2\hat\alpha)=\frac{0.2064}{\sqrt N}$ ，对于 $N=1000$ ，有 $\mathbf{std}(2\hat\alpha)=0.0065$ ；对于 $N=5000$ ，有 $\mathbf{std}(2\hat \alpha)=0.0029$
 
 $$
-\mathbf{std}(\hat b)=\mathbf{std}(-2\hat\alpha\bar x+\bar y)=\mathbf{std}(\sum(\frac1K-\frac{(x_i-\bar x)\bar x}{\sum(x_i-\bar x)^2})y_i)=\\
-\frac{1}{\sqrt{6N}K}\mathbf{std}(\sum\frac{(\sum x_i^2)-K\bar xx_i}{(\sum x_i^2)-K\bar x^2}y_i)=\frac1{\sqrt{6N}K}\sqrt{\sum\left(\frac{(\sum x_i^2)-K\bar xx_i}{(\sum x_i^2)-K\bar x^2}\right)^2x_i^2}
+\mathbf{std}(\hat b)=\mathbf{std}(-2\hat\alpha\bar x+\bar y)=\mathbf{std}(\sum(\frac1K-\frac{(x_i-\bar x)\bar x}{\sum(x_i-\bar x)^2})y_i)=\\\frac{1}{\sqrt{6N}K}\mathbf{std}(\sum\frac{(\sum x_i^2)-K\bar xx_i}{(\sum x_i^2)-K\bar x^2}y_i)=\frac1{\sqrt{6N}K}\sqrt{\sum\left(\frac{(\sum x_i^2)-K\bar xx_i}{(\sum x_i^2)-K\bar x^2}\right)^2x_i^2}
 $$
 
 在此实验中，有 $K=20$ ，计算得 $\mathbf{std}(\hat b)=\frac{148.84}{\sqrt N}$，当 $N=1000$ 时，$\mathbf{std}(\hat b)=4.7$，当 $N=5000$ 时，$\mathbf{std}(\hat b)=2.1$
@@ -179,20 +186,15 @@ $$
 
 
 此时用估计值改写上述方程，有
+
 $$
-\begin{bmatrix}2&0&0&0&-1&1\\0&0&1&1&1&1\\0&2&-1&-1&0&0\\0&0&1&-1&1&-1\end{bmatrix}
-\cdot\begin{bmatrix}\delta\\l_{01}\\l_{00}\\l_{11}\\d_0\\d_1\end{bmatrix}
-=
-\begin{bmatrix}b_{01}-b_{10}\\\hat b\\b_{10}+b_{01}-b_{00}-b_{11}\\b_{00}-b_{11}\end{bmatrix}
+\begin{bmatrix}2&0&0&0&-1&1\\0&0&1&1&1&1\\0&2&-1&-1&0&0\\0&0&1&-1&1&-1\end{bmatrix}\cdot\begin{bmatrix}\delta\\l_{01}\\l_{00}\\l_{11}\\d_0\\d_1\end{bmatrix}=\begin{bmatrix}b_{01}-b_{10}\\\hat b\\b_{10}+b_{01}-b_{00}-b_{11}\\b_{00}-b_{11}\end{bmatrix}
 $$
 
 事实上，实际拟合得到的 $\hat b \approx l_{00}+l_{11}+d_0+d_1$ 在很小，基本上us量级。而其中的每一项都是正数，因此每一项都有一个比较小的上界。则有：
+
 $$
-\begin{bmatrix}2&0&\\0&0\\0&2\\0&0\end{bmatrix}
-\cdot\begin{bmatrix}\delta\\l_{01}\end{bmatrix}
-=
-\begin{bmatrix}b_{01}-b_{10}\\\hat b\\b_{10}+b_{01}-b_{00}-b_{11}\\b_{00}-b_{11}\end{bmatrix}
--\begin{bmatrix}0&0&-1&1\\1&1&1&1\\-1&-1&0&0\\-1&1&-1&1\end{bmatrix}\begin{bmatrix}l_{00}\\l_{11}\\d_0\\d_1\end{bmatrix}\approx\begin{bmatrix}b_{01}-b_{10}\\\hat b\\b_{10}+b_{01}-b_{00}-b_{11}\\b_{00}-b_{11}\end{bmatrix}
+\begin{bmatrix}2&0&\\0&0\\0&2\\0&0\end{bmatrix}\cdot\begin{bmatrix}\delta\\l_{01}\end{bmatrix}=\begin{bmatrix}b_{01}-b_{10}\\\hat b\\b_{10}+b_{01}-b_{00}-b_{11}\\b_{00}-b_{11}\end{bmatrix}-\begin{bmatrix}0&0&-1&1\\1&1&1&1\\-1&-1&0&0\\-1&1&-1&1\end{bmatrix}\begin{bmatrix}l_{00}\\l_{11}\\d_0\\d_1\end{bmatrix}\approx\begin{bmatrix}b_{01}-b_{10}\\\hat b\\b_{10}+b_{01}-b_{00}-b_{11}\\b_{00}-b_{11}\end{bmatrix}
 $$
 其中 $\hat b$ 已经验证很接近0； $b_{00}-b_{11}$ 与接近0的程度可以用来验证假设。
 
